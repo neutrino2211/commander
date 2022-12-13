@@ -20,6 +20,10 @@ func confirmType(registeredType string, variable interface{}) bool {
 	switch variable.(type) {
 	case string:
 		r = registeredType == "string"
+	case uint64:
+		r = registeredType == "uint"
+	case uint32:
+		r = registeredType == "uint"
 	case int64:
 		r = registeredType == "int"
 	case int32:
@@ -40,6 +44,10 @@ func fetchType(variable interface{}) string {
 	switch variable.(type) {
 	case string:
 		r = "string"
+	case uint64:
+		r = "uint"
+	case uint32:
+		r = "uint"
 	case int64:
 		r = "int"
 	case int32:
@@ -57,7 +65,13 @@ func fetchType(variable interface{}) string {
 
 func getValue(v string) interface{} {
 	var r interface{}
-	r, err := strconv.ParseInt(v, 0, 32)
+	r, err := strconv.ParseInt(v, 0, 0)
+
+	if err == nil {
+		return r
+	}
+
+	r, err = strconv.ParseUint(v, 0, 0)
 
 	if err == nil {
 		return r
@@ -70,6 +84,12 @@ func getValue(v string) interface{} {
 	}
 
 	r, err = strconv.ParseFloat(v, 32)
+
+	if err == nil {
+		return r
+	}
+
+	r, err = strconv.ParseFloat(v, 64)
 
 	if err == nil {
 		return r
@@ -163,12 +183,77 @@ func (c *Command) BuildHelp(helpTemplate string) string {
 	return s
 }
 
-func (c *Command) GetBool(key string) bool {
-	r, err := strconv.ParseBool(key)
+func (c *Command) GetString(key string, defaultValue string) string {
+	var r string
 
-	if err != nil {
-		c.DebugLogString(err.Error())
-		return false
+	if v, ok := c.Values[key]; ok {
+		r = v
+	} else {
+		r = defaultValue
+	}
+
+	return r
+}
+
+func (c *Command) GetUint(key string, defaultValue uint) uint {
+	var r uint
+
+	if v, ok := c.Values[key]; ok {
+		i, _ := strconv.ParseUint(v, 0, 0)
+		r = uint(i)
+	} else {
+		r = defaultValue
+	}
+
+	return r
+}
+
+func (c *Command) GetInt(key string, defaultValue int) int {
+	var r int
+
+	if v, ok := c.Values[key]; ok {
+		i, _ := strconv.ParseInt(v, 0, 0)
+		r = int(i)
+	} else {
+		r = defaultValue
+	}
+
+	return r
+}
+
+func (c *Command) GetFloat64(key string, defaultValue float64) float64 {
+	var r float64
+
+	if v, ok := c.Values[key]; ok {
+		i, _ := strconv.ParseFloat(v, 64)
+		r = float64(i)
+	} else {
+		r = defaultValue
+	}
+
+	return r
+}
+
+func (c *Command) GetFloat32(key string, defaultValue float32) float32 {
+	var r float32
+
+	if v, ok := c.Values[key]; ok {
+		i, _ := strconv.ParseFloat(v, 32)
+		r = float32(i)
+	} else {
+		r = defaultValue
+	}
+
+	return r
+}
+
+func (c *Command) GetBool(key string, defaultValue bool) bool {
+	var r bool
+
+	if v, ok := c.Values[key]; ok {
+		r, _ = strconv.ParseBool(v)
+	} else {
+		r = defaultValue
 	}
 
 	return r
