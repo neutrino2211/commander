@@ -151,15 +151,13 @@ func (c *Command) BuildHelp(helpTemplate string) string {
 
 	c.setMaxSpace()
 
-	helpTemplate += `
-	Usage: 
-		{{.Usage}}
-	{{if .Optionals}}
-	Options:
-	{{range $key, $value := .Optionals}}
-		{{$key}} {{spacer $key}} => {{$value.Description}} [{{$value.Type}}] {{end}}
-	{{end}}
-	`
+	helpTemplate +=
+		`Usage: 
+  {{.Usage}}
+{{if .Optionals}}
+  Options:
+    {{range $key, $value := .Optionals}}{{$key}} {{spacer $key}} => {{$value.Description}} [{{$value.Type}}] {{end}}{{end}}
+`
 
 	tmpl, err := template.New("help").Funcs(template.FuncMap{
 		"spacer": func(key string) string {
@@ -347,7 +345,7 @@ func (c *Commander) Parse(cmds []string) {
 
 		fmt.Println("Usage:")
 		fmt.Println("\t", c.name+" <command> [arguments]")
-		fmt.Print("\nCommands:\n\n")
+		fmt.Print("Commands:\n")
 
 		for cmd, command := range c.commands {
 			command.SetName(cmd)
@@ -355,7 +353,7 @@ func (c *Commander) Parse(cmds []string) {
 			command.Help()
 		}
 
-		fmt.Print("\nGlobal Options:\n\n")
+		fmt.Print("\nGlobal Options:\n")
 
 		maxSpaces := 0
 
