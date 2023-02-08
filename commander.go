@@ -151,14 +151,6 @@ func (c *Command) BuildHelp(helpTemplate string) string {
 
 	c.setMaxSpace()
 
-	helpTemplate +=
-		`Usage: 
-  {{.Usage}}
-{{if .Optionals}}
-  Options:
-    {{range $key, $value := .Optionals}}{{$key}} {{spacer $key}} => {{$value.Description}} [{{$value.Type}}]{{end}}{{end}}
-`
-
 	tmpl, err := template.New("help").Funcs(template.FuncMap{
 		"spacer": func(key string) string {
 			return strings.Repeat(" ", int(c.maxSpaceKey)-len(key))
