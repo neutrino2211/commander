@@ -156,7 +156,7 @@ func (c *Command) BuildHelp(helpTemplate string) string {
   {{.Usage}}
 {{if .Optionals}}
   Options:
-    {{range $key, $value := .Optionals}}{{$key}} {{spacer $key}} => {{$value.Description}} [{{$value.Type}}] {{end}}{{end}}
+    {{range $key, $value := .Optionals}}{{$key}} {{spacer $key}} => {{$value.Description}} [{{$value.Type}}]{{end}}{{end}}
 `
 
 	tmpl, err := template.New("help").Funcs(template.FuncMap{
@@ -344,7 +344,7 @@ func (c *Commander) Parse(cmds []string) {
 		c.LogString("command '" + cmdName + "' not found")
 
 		fmt.Println("Usage:")
-		fmt.Println("\t", c.name+" <command> [arguments]")
+		fmt.Println(" ", c.name+" <command> [arguments]")
 		fmt.Print("Commands:\n")
 
 		for cmd, command := range c.commands {
@@ -353,7 +353,7 @@ func (c *Commander) Parse(cmds []string) {
 			command.Help()
 		}
 
-		fmt.Print("\nGlobal Options:\n")
+		fmt.Print("Global Options:\n")
 
 		maxSpaces := 0
 
@@ -365,7 +365,7 @@ func (c *Commander) Parse(cmds []string) {
 
 		for optName, globOption := range c.listeners {
 			spaces := strings.Repeat(" ", maxSpaces-len(optName))
-			fmt.Println("\t", optName+spaces, "=>", globOption.Option.Description, "["+globOption.Option.Type+"]")
+			fmt.Println(" ", optName+spaces, "=>", globOption.Option.Description, "["+globOption.Option.Type+"]")
 		}
 
 		fmt.Println("")
